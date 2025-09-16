@@ -1,4 +1,5 @@
-import { TarotCard, SpreadType } from './types';
+
+import { TarotCard, SpreadType, Rune, AngelCard, DeckType, Element } from './types';
 
 export const TAROT_DECK: TarotCard[] = [
   // Major Arcana
@@ -440,7 +441,7 @@ export const TAROT_DECK: TarotCard[] = [
     arcana: 'Cups',
     keywords: ['Abandonment', 'Withdrawal', 'Escapism', 'Moving on'],
     meaning: 'It is time to walk away from a situation that is no longer emotionally fulfilling. Seek a deeper meaning.',
-    reversedMeaning: 'Fear of moving on, stagnation. You are afraid to leave a comfortable but unfulfilling situation.',
+    reversedMeaning: 'Fear of moving on, stagnation. You are afraid to leave a comfortable but unfilling situation.',
     microQuest: 'Identify one thing in your life that is draining your emotional energy.',
     element: 'Water',
   },
@@ -788,14 +789,60 @@ export const TAROT_DECK: TarotCard[] = [
   },
 ];
 
-export const ELEMENT_COLORS: { [key in TarotCard['element']]: string } = {
+export const RUNE_DECK: Rune[] = [
+    { id: 'rune_fehu', name: 'Fehu', symbol: 'ᚠ', keywords: ['Wealth', 'Abundance', 'Prosperity', 'Possessions'], meaning: 'Represents material wealth, prosperity, and the rewards of hard work. It signifies new beginnings and financial security.', reversible: true },
+    { id: 'rune_uruz', name: 'Uruz', symbol: 'ᚢ', keywords: ['Strength', 'Endurance', 'Health', 'Courage'], meaning: 'Symbolizes raw power, physical strength, and good health. It points to determination, persistence, and the will to overcome.', reversible: true },
+    { id: 'rune_thurisaz', name: 'Thurisaz', symbol: 'ᚦ', keywords: ['Protection', 'Conflict', 'Warning', 'Defense'], meaning: 'The rune of giants and thorns. It acts as a protective shield but also warns of potential conflict or a difficult choice ahead.', reversible: true },
+    { id: 'rune_ansuz', name: 'Ansuz', symbol: 'ᚨ', keywords: ['Communication', 'Wisdom', 'Inspiration', 'Divine'], meaning: 'Represents the spoken word, divine inspiration, and communication. It suggests seeking or giving wise counsel.', reversible: true },
+    { id: 'rune_raidho', name: 'Raidho', symbol: 'ᚱ', keywords: ['Journey', 'Travel', 'Movement', 'Progress'], meaning: 'Symbolizes a journey, both physical and spiritual. It indicates change, progress, and moving forward on your path.', reversible: true },
+    { id: 'rune_kenaz', name: 'Kenaz', symbol: 'ᚲ', keywords: ['Knowledge', 'Creativity', 'Enlightenment', 'Clarity'], meaning: 'The rune of the torch. It illuminates the path, bringing knowledge, clarity, and creative inspiration.', reversible: true },
+    { id: 'rune_gebo', name: 'Gebo', symbol: 'ᚷ', keywords: ['Gifts', 'Partnership', 'Generosity', 'Balance'], meaning: 'Represents a gift, a partnership, or a balanced exchange. It signifies generosity and the bonds between people.', reversible: false },
+    { id: 'rune_wunjo', name: 'Wunjo', symbol: 'ᚹ', keywords: ['Joy', 'Happiness', 'Harmony', 'Success'], meaning: 'Symbolizes joy, contentment, and emotional fulfillment. It indicates success, harmony in relationships, and general well-being.', reversible: true },
+    { id: 'rune_hagalaz', name: 'Hagalaz', symbol: 'ᚺ', keywords: ['Disruption', 'Change', 'Upheaval', 'Crisis'], meaning: 'The hail rune. It signifies sudden, uncontrollable disruption and radical change. This destruction clears the way for new growth.', reversible: false },
+    { id: 'rune_nauthiz', name: 'Nauthiz', symbol: 'ᚾ', keywords: ['Need', 'Constraint', 'Patience', 'Hardship'], meaning: 'Represents need, constraint, and hardship. It teaches patience and resilience in the face of challenges.', reversible: true },
+    { id: 'rune_isa', name: 'Isa', symbol: 'ᛁ', keywords: ['Stasis', 'Pause', 'Stillness', 'Patience'], meaning: 'The ice rune. It indicates a period of stillness, pause, or stagnation. A time for reflection, not action.', reversible: false },
+    { id: 'rune_jera', name: 'Jera', symbol: 'ᛃ', keywords: ['Harvest', 'Cycles', 'Reward', 'Patience'], meaning: 'Symbolizes the harvest and the turning of the year. It signifies the rewards of past efforts coming to fruition and the natural cycle of life.', reversible: false },
+    { id: 'rune_eihwaz', name: 'Eihwaz', symbol: 'ᛇ', keywords: ['Defense', 'Endurance', 'Transformation', 'Connection'], meaning: 'The yew tree rune, representing the connection between life and death. It symbolizes defense, endurance, and profound transformation.', reversible: true },
+    { id: 'rune_perthro', name: 'Perthro', symbol: 'ᛈ', keywords: ['Mystery', 'Fate', 'Secrets', 'Chance'], meaning: 'Represents mystery, fate, and things yet unknown. It can signify a secret revealed or a gamble.', reversible: true },
+    { id: 'rune_algiz', name: 'Algiz', symbol: 'ᛉ', keywords: ['Protection', 'Shield', 'Spirituality', 'Defense'], meaning: 'The elk rune, a powerful symbol of protection and defense. It signifies a connection to higher consciousness and spiritual awareness.', reversible: true },
+    { id: 'rune_sowilo', name: 'Sowilo', symbol: 'ᛊ', keywords: ['Success', 'Victory', 'Energy', 'Vitality'], meaning: 'The sun rune. It represents victory, success, and immense power. It brings vitality, clarity, and positive energy.', reversible: false },
+    { id: 'rune_tiwaz', name: 'Tiwaz', symbol: 'ᛏ', keywords: ['Justice', 'Honor', 'Leadership', 'Courage'], meaning: 'Named for the god Tyr, it symbolizes justice, honor, and victory in battle. It represents courage and self-sacrifice for a greater cause.', reversible: true },
+    { id: 'rune_berkano', name: 'Berkano', symbol: 'ᛒ', keywords: ['New Beginnings', 'Growth', 'Fertility', 'Nurturing'], meaning: 'The birch rune, symbolizing new beginnings, growth, and fertility. It has a nurturing, healing energy.', reversible: true },
+    { id: 'rune_ehwaz', name: 'Ehwaz', symbol: 'ᛖ', keywords: ['Movement', 'Teamwork', 'Trust', 'Partnership'], meaning: 'The horse rune. It represents movement, progress, and teamwork. It signifies trust and loyalty in partnerships.', reversible: true },
+    { id: 'rune_mannaz', name: 'Mannaz', symbol: 'ᛗ', keywords: ['Humanity', 'Community', 'Self', 'Collaboration'], meaning: 'Represents humanity, the self, and our connection to others. It calls for collaboration, social awareness, and self-reflection.', reversible: true },
+    { id: 'rune_laguz', name: 'Laguz', symbol: 'ᛚ', keywords: ['Intuition', 'Emotions', 'Flow', 'Dreams'], meaning: 'The water rune. It symbolizes intuition, emotions, and the flow of life. It encourages trusting your inner voice and subconscious guidance.', reversible: true },
+    { id: 'rune_ingwaz', name: 'Ingwaz', symbol: 'ᛝ', keywords: ['Completion', 'Gestation', 'Potential', 'New Phase'], meaning: 'Represents completion of a phase and the gestation of new potential. It signifies a time of internal growth before a new beginning.', reversible: false },
+    { id: 'rune_dagaz', name: 'Dagaz', symbol: 'ᛞ', keywords: ['Awakening', 'Breakthrough', 'Clarity', 'Hope'], meaning: 'The day rune. It symbolizes breakthrough, awakening, and clarity after a period of darkness. A rune of hope and transformation.', reversible: false },
+    { id: 'rune_othala', name: 'Othala', symbol: 'ᛟ', keywords: ['Legacy', 'Heritage', 'Home', 'Family'], meaning: 'Represents ancestral heritage, home, and family legacy. It signifies the values and traditions passed down through generations.', reversible: true },
+];
+
+export const ANGEL_CARD_DECK: AngelCard[] = [
+    { id: 'angel_michael', name: 'Archangel Michael', keywords: ['Protection', 'Courage', 'Truth', 'Strength'], meaning: 'You are protected. Call upon Michael for courage to face challenges and to cut cords with negativity. Speak your truth with confidence.' },
+    { id: 'angel_raphael', name: 'Archangel Raphael', keywords: ['Healing', 'Health', 'Guidance', 'Travelers'], meaning: 'Healing energy surrounds you. Raphael assists with physical and emotional well-being. Trust the guidance you receive for a healthier path.' },
+    { id: 'angel_gabriel', name: 'Archangel Gabriel', keywords: ['Communication', 'Creativity', 'Messages', 'Children'], meaning: 'A message is coming. Gabriel nurtures creative projects and helps you communicate clearly and lovingly. A time for inspired expression.' },
+    { id: 'angel_uriel', name: 'Archangel Uriel', keywords: ['Wisdom', 'Clarity', 'Insight', 'Problem-Solving'], meaning: 'Illuminate your mind. Uriel brings flashes of insight and helps solve problems. Trust your ideas and intellectual pursuits.' },
+    { id: 'angel_chamuel', name: 'Archangel Chamuel', keywords: ['Unconditional Love', 'Relationships', 'Peace', 'Finding'], meaning: 'Focus on love. Chamuel helps heal relationships, find lost items, and establish inner peace. Open your heart to giving and receiving love.' },
+    { id: 'angel_zadkiel', name: 'Archangel Zadkiel', keywords: ['Forgiveness', 'Mercy', 'Transmutation', 'Memory'], meaning: 'It is time to forgive. Zadkiel helps you release old wounds and transmute negative energy into positive. Let go of judgment toward yourself and others.' },
+    { id: 'angel_jophiel', name: 'Archangel Jophiel', keywords: ['Beauty', 'Positivity', 'Art', 'Patience'], meaning: 'See the beauty in all things. Jophiel helps you create a beautiful environment and maintain a positive outlook. Slow down and appreciate the present.' },
+    { id: 'angel_abundance', name: 'Angel of Abundance', keywords: ['Prosperity', 'Gratitude', 'Flow', 'Receiving'], meaning: 'A flow of abundance is opening up for you. Be grateful for what you have to attract more. Be open to receiving unexpected gifts and opportunities.' },
+    { id: 'angel_clarity', name: 'Angel of Clarity', keywords: ['Understanding', 'Focus', 'Decision-Making', 'Truth'], meaning: 'Confusion is lifting. This is a time for clear decisions. The truth of a situation will be revealed to you. Focus on what is most important.' },
+    { id: 'angel_strength', name: 'Angel of Strength', keywords: ['Resilience', 'Endurance', 'Patience', 'Inner Power'], meaning: 'You are stronger than you know. You have the inner resilience to overcome any current challenges. Be patient and persistent.' },
+    { id: 'angel_peace', name: 'Angel of Peace', keywords: ['Serenity', 'Calm', 'Release', 'Harmony'], meaning: 'Let go of conflict and embrace serenity. This angel brings a sense of calm to a chaotic situation. Choose peace in your thoughts and actions.' },
+    { id: 'angel_newbeginnings', name: 'Angel of New Beginnings', keywords: ['Opportunity', 'Change', 'Growth', 'Fresh Start'], meaning: 'A new door is opening. Embrace the opportunity for a fresh start. This is a time of personal growth and positive change.' },
+    { id: 'angel_wisdom', name: 'Angel of Wisdom', keywords: ['Intuition', 'Learning', 'Guidance', 'Soul-Searching'], meaning: 'Trust your inner wisdom. Your intuition is guiding you correctly. Seek knowledge and take time for soul-searching and reflection.' },
+    { id: 'angel_creativity', name: 'Angel of Creativity', keywords: ['Inspiration', 'Art', 'Expression', 'Passion'], meaning: 'Your creative potential is at a peak. It is time to express yourself through art, music, writing, or any passion. Follow your inspiration.' },
+    { id: 'angel_celebration', name: 'Angel of Celebration', keywords: ['Joy', 'Success', 'Achievement', 'Community'], meaning: 'A time for joy and celebration is here. Acknowledge your achievements and share your happiness with others. You have earned this success.' },
+];
+
+
+export const ELEMENT_COLORS: { [key in Element]: string } = {
   Fire: 'text-[#FF7A1A]',
   Earth: 'text-[#29C26A]',
   Air: 'text-[#21C7F2]',
   Water: 'text-[#6E7BFF]',
 };
 
-export const ELEMENT_BORDERS: { [key in TarotCard['element']]: string } = {
+export const ELEMENT_BORDERS: { [key in Element]: string } = {
     Fire: 'border-[#FF7A1A]',
     Earth: 'border-[#29C26A]',
     Air: 'border-[#21C7F2]',
@@ -814,19 +861,48 @@ export const NUMEROLOGY_MEANINGS: { [key: number]: { theme: string, description:
   9: { theme: "Completion & Culmination", description: "A time for release, forgiveness, and finishing cycles." },
 };
 
-export const ASTROLOGICAL_SIGNS = [
-  'Aries', 'Taurus', 'Gemini', 'Cancer', 'Leo', 'Virgo',
-  'Libra', 'Scorpio', 'Sagittarius', 'Capricorn', 'Aquarius', 'Pisces'
-] as const;
-
 // Define spread details
-export const SPREAD_DETAILS: { [key in SpreadType]: { name: string; description: string; cardCount: number; isPremium: boolean; positions: string[] } } = {
+export const SPREAD_DETAILS: { [key in SpreadType]: { name: string; description: string; cardCount: number; isPremium: boolean; positions: string[]; positionMeanings: string[]; deck: DeckType[] } } = {
+  // Tarot & Angel Spreads
   '3-card': {
     name: 'Three Card Spread',
     description: 'A quick overview of past, present, and future.',
     cardCount: 3,
     isPremium: false,
     positions: ['The Past', 'The Present', 'The Future'],
+    positionMeanings: [
+        'Represents the energies and events of your recent past that influence the present situation.',
+        'Shows the current state of affairs and the immediate challenge or focus.',
+        'Indicates the likely outcome or direction the situation is heading if things continue on their current course.',
+    ],
+    deck: ['tarot', 'angel-cards'],
+  },
+  'mind-body-spirit': {
+    name: 'Mind-Body-Spirit',
+    description: 'A holistic check-in on your well-being.',
+    cardCount: 3,
+    isPremium: false,
+    positions: ['Mind', 'Body', 'Spirit'],
+    positionMeanings: [
+        'Your current mental state, thoughts, and beliefs.',
+        'The state of your physical health and connection to your body.',
+        'Your spiritual well-being and connection to your higher self.',
+    ],
+    deck: ['tarot', 'angel-cards'],
+  },
+  'career-path': {
+    name: 'Career Path Spread',
+    description: 'Gain clarity on your professional journey.',
+    cardCount: 4,
+    isPremium: false,
+    positions: ['Current Situation', 'Your Strengths', 'Potential Obstacle', 'Next Step'],
+    positionMeanings: [
+        'Represents your current job or career situation.',
+        'Highlights the key skills and talents you bring to your work.',
+        'An internal or external challenge you may need to overcome.',
+        'Actionable advice for what to focus on next in your career.',
+    ],
+    deck: ['tarot'],
   },
   'the-great-work': {
     name: 'The Great Work',
@@ -834,6 +910,55 @@ export const SPREAD_DETAILS: { [key in SpreadType]: { name: string; description:
     cardCount: 5,
     isPremium: false,
     positions: ['The Foundation', 'The Challenge', 'The Action', 'The Goal', 'The Outcome'],
+    positionMeanings: [
+        'The core idea or starting point of your creative project or personal endeavor.',
+        'The primary obstacle or conflict you must overcome to make progress.',
+        'The recommended course of action or mindset to adopt to tackle the challenge.',
+        'The ultimate aim or desired state of completion for your work.',
+        'The potential final result if you follow the guidance of the spread.',
+    ],
+    deck: ['tarot'],
+  },
+  'relationship': {
+    name: 'Relationship Spread',
+    description: 'Explore the dynamics of a partnership.',
+    cardCount: 6,
+    isPremium: true,
+    positions: ['You', 'Your Partner', 'The Foundation', 'The Challenge', 'Shared Goal', 'The Future'],
+    positionMeanings: [
+        'Your perspective, feelings, and contribution to the relationship.',
+        'Your partner\'s perspective, feelings, and contribution.',
+        'The core foundation or basis of your relationship.',
+        'The primary obstacle or issue you both currently face.',
+        'A shared desire or goal that can unite you.',
+        'The likely direction the relationship is heading if the current path continues.',
+    ],
+    deck: ['tarot'],
+  },
+  'decision-making': {
+    name: 'Decision Making',
+    description: 'Compare two paths to make a difficult choice.',
+    cardCount: 7,
+    isPremium: true,
+    positions: [
+        'The Situation',
+        'Path A',
+        'Outcome A',
+        'Path B',
+        'Outcome B',
+        'Hidden Factor',
+        'Advice'
+    ],
+    positionMeanings: [
+        'The core situation or decision you are facing.',
+        'The energy and nature of choosing the first option.',
+        'The likely result if you follow Path A.',
+        'The energy and nature of choosing the second option.',
+        'The likely result if you follow Path B.',
+        'An unknown influence or underlying issue to consider.',
+        'The final piece of guidance to help you decide.',
+    ],
+    deck: ['tarot'],
   },
   'celtic-cross': {
     name: 'Celtic Cross',
@@ -853,5 +978,85 @@ export const SPREAD_DETAILS: { [key in SpreadType]: { name: string; description:
       '10. The Final Outcome',
       '11. Overall Theme'
     ],
+    positionMeanings: [
+        'This card represents the central issue or the querent\'s current state of being.',
+        'This card lies across the first, representing the immediate challenge or obstacle.',
+        'The root cause of the situation, the subconscious influences, and past events.',
+        'Recent events that have led up to the current situation.',
+        'The best possible outcome or goal to strive for. What is in the conscious mind.',
+        'What is likely to happen next in the near future.',
+        'The querent\'s own feelings, thoughts, and perspective on the situation.',
+        'The people, energies, or environmental factors affecting the situation.',
+        'The querent\'s deepest hopes and fears regarding the outcome.',
+        'The likely long-term result or resolution of the situation.',
+        'A final clarifying card that synthesizes the entire reading.',
+    ],
+    deck: ['tarot'],
+  },
+  // Rune Spreads
+  'single-rune': {
+    name: 'Single Rune',
+    description: 'Quick guidance for a specific question or the day ahead.',
+    cardCount: 1,
+    isPremium: false,
+    positions: ['Guidance'],
+    positionMeanings: ['The core energy or answer you need to focus on right now.'],
+    deck: ['runes'],
+  },
+  'three-rune-norn': {
+    name: 'Three Rune Spread (The Norns)',
+    description: 'A classic spread exploring past, present, and future influences.',
+    cardCount: 3,
+    isPremium: false,
+    positions: ['Past', 'Present', 'Future'],
+    positionMeanings: [
+        'What was: The events and influences from the past that have shaped the current situation.',
+        'What is: The current state of affairs and the immediate challenge or focus.',
+        'What will be: The likely outcome or direction if the present course is maintained.'
+    ],
+    deck: ['runes'],
+  },
+  'five-rune-cross': {
+    name: 'Five Rune Cross',
+    description: 'A detailed spread for analyzing a situation from multiple angles.',
+    cardCount: 5,
+    isPremium: true,
+    positions: ['The Present', 'The Challenge', 'The Past', 'The Strengths', 'The Outcome'],
+    positionMeanings: [
+        'Represents the heart of the matter, the current situation.',
+        'The immediate obstacle or challenge that must be faced.',
+        'The foundational past events that led to this situation.',
+        'The resources, strengths, or positive energies you can draw upon.',
+        'The potential outcome if you address the challenge with your strengths.'
+    ],
+    deck: ['runes'],
+  },
+  'nine-rune-grid': {
+    name: 'The Nine Rune Grid',
+    description: 'A comprehensive look at the nine realms of influence in your life.',
+    cardCount: 9,
+    isPremium: true,
+    positions: ['Higher Self', 'Mind/Intellect', 'Heart/Emotions', 'Root/Foundation', 'Will/Action', 'Future Goal', 'Fears/Shadows', 'Home/Community', 'Final Outcome'],
+    positionMeanings: [
+        'Spiritual influences and your higher self.',
+        'Thoughts, intellect, and communication.',
+        'Emotions, relationships, and creativity.',
+        'The foundation of the issue, security, and physical reality.',
+        'Your drive, motivation, and the actions you are taking.',
+        'Your aspirations and the direction you are heading.',
+        'Hidden challenges, fears, or aspects of your shadow self.',
+        'Your environment, family, and community influences.',
+        'The culmination of all influences, the final resolution.'
+    ],
+    deck: ['runes'],
+  },
+  'full-cast': {
+    name: 'Full Cast (Scatter)',
+    description: 'A traditional, intuitive reading where rune positions and clusters matter.',
+    cardCount: 7,
+    isPremium: true,
+    positions: ['Rune 1', 'Rune 2', 'Rune 3', 'Rune 4', 'Rune 5', 'Rune 6', 'Rune 7'],
+    positionMeanings: ['Position is determined by the random cast. Proximity and clusters are key to interpretation.'],
+    deck: ['runes'],
   },
 };

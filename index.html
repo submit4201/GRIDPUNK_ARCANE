@@ -11,12 +11,16 @@
     <style>
       body {
         font-family: 'Inter', sans-serif;
-        background-color: #0B0C10;
-        color: #EAEAF2;
+        background-color: #000000;
+        /* Updated for a cooler, more thematic 'Gridpunk' feel with high contrast */
+        color: #E0E6F1;
       }
       .font-dm-sans {
         font-family: 'DM Sans', sans-serif;
       }
+      /* Updated text colors for better theme cohesion and accessibility */
+      .text-text-primary { color: #E0E6F1; }
+      .text-text-muted { color: #8A94A6; }
 
       /* Simple card shuffle animation */
       @keyframes card-shuffle {
@@ -42,6 +46,30 @@
       .candle-flicker {
         animation: flicker 4s infinite linear;
       }
+      
+      /* Card shuffle animation for readings page */
+      @keyframes shuffle-1 {
+        0%, 100% { transform: translate(0, 0) rotate(0deg); z-index: 3; }
+        25% { transform: translate(-40px, -20px) rotate(-15deg); }
+        50% { transform: translate(0, 20px) rotate(0deg); }
+        75% { transform: translate(40px, -20px) rotate(15deg); }
+      }
+      @keyframes shuffle-2 {
+        0%, 100% { transform: translate(0, 0) rotate(0deg); z-index: 2; }
+        25% { transform: translate(40px, 10px) rotate(15deg); }
+        50% { transform: translate(0, -10px) rotate(0deg); }
+        75% { transform: translate(-40px, 10px) rotate(-15deg); }
+      }
+      @keyframes shuffle-3 {
+        0%, 100% { transform: translate(0, 0) rotate(0deg); z-index: 1; }
+        25% { transform: translate(-20px, 20px) rotate(5deg); }
+        50% { transform: translate(20px, 0) rotate(-5deg); }
+        75% { transform: translate(0, -20px) rotate(0deg); }
+      }
+      .animate-shuffle-1 { animation: shuffle-1 1.5s ease-in-out; }
+      .animate-shuffle-2 { animation: shuffle-2 1.5s ease-in-out; }
+      .animate-shuffle-3 { animation: shuffle-3 1.5s ease-in-out; }
+
 
       /* Reduce motion for users who prefer it */
       @media (prefers-reduced-motion: reduce) {

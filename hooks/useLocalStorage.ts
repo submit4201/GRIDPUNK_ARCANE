@@ -1,5 +1,8 @@
 import { useState, useEffect } from 'react';
 
+// This hook provides a state that is persisted in the browser's localStorage.
+// It ensures that any data managed by this hook (like user profiles, journal entries, etc.)
+// is saved across browser sessions, making the user's data persistent on their device.
 function useLocalStorage<T>(key: string, initialValue: T): [T, (value: T) => void] {
   const [storedValue, setStoredValue] = useState<T>(() => {
     try {

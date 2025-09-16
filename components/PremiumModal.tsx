@@ -28,7 +28,7 @@ const PremiumModal: React.FC<PremiumModalProps> = ({ isOpen, onClose, onUpgrade 
         <div className="mt-6 flex flex-col gap-3">
           <button
             onClick={onUpgrade}
-            className="w-full px-6 py-3 rounded-lg font-bold bg-[#FF7A1A] text-white hover:bg-opacity-80 transition-colors"
+            className="w-full px-6 py-3 rounded-lg font-bold bg-[#D95B00] text-white hover:bg-opacity-80 transition-colors"
           >
             Go to Profile & Upgrade
           </button>
