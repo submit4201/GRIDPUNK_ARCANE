@@ -842,6 +842,13 @@ export const ELEMENT_COLORS: { [key in Element]: string } = {
   Water: 'text-[#6E7BFF]',
 };
 
+export const ELEMENT_HEX_COLORS: { [key in Element]: string } = {
+  Fire: '#FF7A1A',
+  Earth: '#29C26A',
+  Air: '#21C7F2',
+  Water: '#6E7BFF',
+};
+
 export const ELEMENT_BORDERS: { [key in Element]: string } = {
     Fire: 'border-[#FF7A1A]',
     Earth: 'border-[#29C26A]',

@@ -29,7 +29,7 @@ const PlaceholderCard: React.FC<{ className?: string }> = ({ className }) => (
 
 
 const ReadingsPage: React.FC<{ setPage: (page: Page) => void }> = ({ setPage }) => {
-    const { isPremium, addSavedReading, userProfile, runeCastsToday, incrementRuneCast } = useApp();
+    const { isPremium, addSavedReading, userProfile, runeCastsToday, incrementRuneCast, addXp } = useApp();
     const [readingStep, setReadingStep] = useState<'select-deck' | 'select-spread' | 'shuffling' | 'draw-cards' | 'view-reading'>('select-deck');
     const [selectedDeckType, setSelectedDeckType] = useState<DeckType | null>(null);
     const [selectedSpread, setSelectedSpread] = useState<SpreadType | null>(null);
@@ -273,6 +273,7 @@ const ReadingsPage: React.FC<{ setPage: (page: Page) => void }> = ({ setPage }) 
             aiSummary: aiSummary,
             userNotes: '',
         });
+        addXp(25); // Award XP for saving a reading
         setPage('Journal');
     };
     

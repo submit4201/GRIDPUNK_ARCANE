@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Page } from './types';
 import DailyPage from './pages/DailyPage';
 import ReadingsPage from './pages/ReadingsPage';
@@ -9,6 +9,7 @@ import OnboardingPage from './pages/OnboardingPage';
 import GuidePage from './pages/GuidePage';
 import { HomeIcon, CardsIcon, JournalIcon, BarChartIcon, UserIcon, CompassIcon } from './components/icons';
 import { AppProvider, useApp } from './context/AppContext';
+import { checkAndUnlockAchievements } from './services/achievementService';
 
 const navItems = [
   { name: 'Daily', icon: HomeIcon, page: 'Daily' as Page },
@@ -68,9 +69,21 @@ const pageComponents: { [key in Page]: React.ComponentType<any> } = {
   Onboarding: OnboardingPage,
 };
 
-// FIX: Merged MainApp into AppContent to consume navigation state from the context.
 const AppContent: React.FC = () => {
-    const { isOnboarded, activePage, setPage } = useApp();
+    const { isOnboarded, activePage, setPage, dailyDrawHistory, savedReadings, journalEntries, userProfile, unlockAchievement } = useApp();
+
+    useEffect(() => {
+        if (isOnboarded) {
+            const stateForAchievements = {
+                dailyDrawHistory,
+                savedReadings,
+                journalEntries,
+                unlockedAchievements: userProfile.unlockedAchievements
+            };
+            checkAndUnlockAchievements(stateForAchievements, unlockAchievement);
+        }
+    }, [isOnboarded, dailyDrawHistory, savedReadings, journalEntries]);
+
 
     if (!isOnboarded) {
         return <OnboardingPage />;

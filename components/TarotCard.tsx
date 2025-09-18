@@ -1,7 +1,9 @@
+
 import React from 'react';
 import { DrawnDivinationCard, TarotCard, Rune } from '../types';
-import { ELEMENT_BORDERS, ELEMENT_COLORS } from '../constants';
-import { SunIcon, FireIcon, WaterIcon, AirIcon, EarthIcon, MajorArcanaIcon } from './icons';
+import { ELEMENT_BORDERS, ELEMENT_COLORS, ELEMENT_HEX_COLORS } from '../constants';
+import { SunIcon } from './icons';
+import { SeededRandom, createNumericSeed } from '../services/tarotService';
 
 interface DivinationCardDisplayProps {
   drawnCard: DrawnDivinationCard;
@@ -11,21 +13,48 @@ interface DivinationCardDisplayProps {
   onClick?: () => void;
 }
 
-const CardArt: React.FC<{ card: TarotCard, className?:string }> = ({ card, className }) => {
-    const elementColorClass = ELEMENT_COLORS[card.element].replace('text-', '');
-    const iconProps = { className: `w-32 h-32 text-[${elementColorClass}]/80 ${className}`};
+const GenerativeCardArt: React.FC<{ card: TarotCard }> = ({ card }) => {
+    const seed = createNumericSeed(card.name + card.element);
+    const random = new SeededRandom(seed);
+    const color = ELEMENT_HEX_COLORS[card.element];
+    const numLines = 10 + random.nextInt(0, 15);
+    const numCircles = 5 + random.nextInt(0, 10);
 
-    if (card.arcana === 'Major') {
-        return <MajorArcanaIcon {...iconProps} />;
-    }
-    switch (card.element) {
-        case 'Fire': return <FireIcon {...iconProps} />;
-        case 'Water': return <WaterIcon {...iconProps} />;
-        case 'Air': return <AirIcon {...iconProps} />;
-        case 'Earth': return <EarthIcon {...iconProps} />;
-        default: return <SunIcon {...iconProps} />;
-    }
+    const lines = Array.from({ length: numLines }).map((_, i) => ({
+        x1: random.nextInt(0, 100),
+        y1: random.nextInt(0, 100),
+        x2: random.nextInt(0, 100),
+        y2: random.nextInt(0, 100),
+        opacity: 0.1 + random.nextFloat() * 0.4,
+        strokeWidth: 1 + random.nextFloat() * 2,
+    }));
+
+    const circles = Array.from({ length: numCircles }).map((_, i) => ({
+        cx: random.nextInt(10, 90),
+        cy: random.nextInt(10, 90),
+        r: 1 + random.nextInt(0, 8),
+        opacity: 0.2 + random.nextFloat() * 0.5,
+    }));
+
+    return (
+        <svg viewBox="0 0 100 100" className="w-full h-full absolute inset-0 opacity-80" preserveAspectRatio="none">
+            <defs>
+                <radialGradient id={`grad-${card.id}`}>
+                    <stop offset="0%" stopColor={color} stopOpacity="0.3" />
+                    <stop offset="100%" stopColor={color} stopOpacity="0" />
+                </radialGradient>
+            </defs>
+            <rect width="100" height="100" fill={`url(#grad-${card.id})`} />
+            {lines.map((l, i) => (
+                <line key={`line-${i}`} {...l} stroke={color} style={{ opacity: l.opacity, strokeWidth: `${l.strokeWidth}px` }} />
+            ))}
+            {circles.map((c, i) => (
+                <circle key={`circle-${i}`} {...c} fill="none" stroke={color} style={{ opacity: c.opacity }} />
+            ))}
+        </svg>
+    );
 };
+
 
 const AngelCardDisplay: React.FC<{ drawnCard: DrawnDivinationCard, isRevealed: boolean, className?: string, style?: React.CSSProperties, onClick?: () => void }> = ({ drawnCard, isRevealed, className, style, onClick }) => {
     const { card } = drawnCard;
@@ -151,7 +180,7 @@ const TarotCardDisplay: React.FC<{ drawnCard: DrawnDivinationCard, isRevealed: b
               </div>
               
               <div className="relative z-10 flex items-center justify-center grow">
-                <CardArt card={tarotCard} />
+                <GenerativeCardArt card={tarotCard} />
               </div>
               
               <div className={`relative z-10 text-right transition-transform duration-300 ${isReversed ? 'transform -rotate-180' : ''}`}>

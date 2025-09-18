@@ -7,7 +7,7 @@ import DivinationCardDisplay from '../components/TarotCard';
 import CardDetailModal from '../components/CardDetailModal';
 
 const SavedReadingEntry: React.FC<{ reading: SavedReading; onCardClick: (card: DrawnDivinationCard) => void; }> = ({ reading, onCardClick }) => {
-    const { updateSavedReadingNotes } = useApp();
+    const { updateSavedReadingNotes, addXp } = useApp();
     const [notes, setNotes] = useState(reading.userNotes);
     const [isEditing, setIsEditing] = useState(false);
 
@@ -16,6 +16,9 @@ const SavedReadingEntry: React.FC<{ reading: SavedReading; onCardClick: (card: D
     }, [reading.userNotes]);
 
     const handleSaveNotes = () => {
+        if (notes.trim() && notes !== reading.userNotes) {
+            addXp(5); // Award XP for adding/updating notes
+        }
         updateSavedReadingNotes(reading.id, notes);
         setIsEditing(false);
     };
@@ -122,13 +125,14 @@ const SavedReadingEntry: React.FC<{ reading: SavedReading; onCardClick: (card: D
 
 
 const JournalPage: React.FC = () => {
-  const { journalEntries, addJournalEntry, savedReadings } = useApp();
+  const { journalEntries, addJournalEntry, savedReadings, addXp } = useApp();
   const [newEntryText, setNewEntryText] = useState('');
   const [modalCard, setModalCard] = useState<DrawnDivinationCard | null>(null);
 
   const handleSave = () => {
     if (newEntryText.trim()) {
       addJournalEntry(newEntryText);
+      addXp(5); // Award XP for new journal entry
       setNewEntryText('');
     }
   };

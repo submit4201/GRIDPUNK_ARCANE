@@ -45,7 +45,12 @@ const OnboardingPage: React.FC = () => {
   const prevStep = () => setStep(s => s - 1);
 
   const handleSubmit = () => {
-    setUserProfile(formData);
+    // If currentName is empty, default it to givenName
+    const finalData = {
+        ...formData,
+        currentName: formData.currentName.trim() || formData.givenName.trim(),
+    };
+    setUserProfile(finalData);
     setIsOnboarded(true);
   };
 
@@ -61,8 +66,9 @@ const OnboardingPage: React.FC = () => {
               <input type="text" id="givenName" value={formData.givenName} onChange={handleInputChange} className="w-full p-3 bg-[#0B0C10] border border-[#232533] rounded-lg focus:ring-2 focus:ring-[#6E7BFF]" />
             </div>
             <div>
-              <label htmlFor="usedName" className="block text-sm font-medium text-text-muted mb-1">Used Name (current)</label>
-              <input type="text" id="usedName" value={formData.usedName} onChange={handleInputChange} className="w-full p-3 bg-[#0B0C10] border border-[#232533] rounded-lg focus:ring-2 focus:ring-[#6E7BFF]" />
+              <label htmlFor="currentName" className="block text-sm font-medium text-text-muted mb-1">Current Name</label>
+              <input type="text" id="currentName" value={formData.currentName} onChange={handleInputChange} className="w-full p-3 bg-[#0B0C10] border border-[#232533] rounded-lg focus:ring-2 focus:ring-[#6E7BFF]" />
+              <p className="text-xs text-text-muted mt-1">The name you go by now. Used for your 'Current Vibe' number.</p>
             </div>
              <div>
               <label htmlFor="mothersMaidenName" className="block text-sm font-medium text-text-muted mb-1">Mother's Maiden Name</label>

@@ -7,6 +7,7 @@ import { SunIcon, BookOpenIcon, SparklesIcon, ZapIcon, DnaIcon } from '../compon
 import { GoogleGenAI, Type } from '@google/genai';
 import { generateCosmicBlueprint } from '../services/cosmicService';
 import CosmicBlueprintDisplay from '../components/CosmicBlueprintDisplay';
+import { TAROT_DECK } from '../constants';
 
 interface CardReadingOutput {
   coreMessage: string;
@@ -37,7 +38,7 @@ const InsightCard: React.FC<{ icon: React.ReactNode; title: string; children: Re
 
 
 const DailyPage: React.FC = () => {
-  const { addDailyDrawToHistory, dailyDrawHistory, userProfile } = useApp();
+  const { addDailyDrawToHistory, dailyDrawHistory, userProfile, addXp } = useApp();
   
   const [chosenCard, setChosenCard] = useState<DrawnCard | null>(null);
   const [hasChosen, setHasChosen] = useState(false);
@@ -48,28 +49,51 @@ const DailyPage: React.FC = () => {
 
   const today = new Date();
   const todayStr = today.toISOString().split('T')[0];
-  const userId = 'gridpunk-arcana-user-01'; // Stable user ID
 
-  const dailySeed = useMemo(() => getDailySeed(userId, today), [todayStr]);
+  const dailySeed = useMemo(() => getDailySeed(userProfile, today), [userProfile, todayStr]);
   const dailyNumber = useMemo(() => calculateDailyNumber(today), [todayStr]);
   const monthlyNumber = useMemo(() => calculateMonthlyNumber(today), [today.getMonth(), today.getFullYear()]);
   const yearlyNumber = useMemo(() => calculateYearlyNumber(today), [today.getFullYear()]);
   const cosmicBlueprint = useMemo(() => generateCosmicBlueprint(userProfile), [userProfile]);
 
   useEffect(() => {
-    const todayRecord = dailyDrawHistory.find(record => record.date === todayStr);
+    // Proactive Data Sanitization: Pre-filter the entire history to remove any structurally
+    // invalid records before attempting to use them. This is the most robust way to prevent
+    // corrupted data from localStorage from causing errors.
+    const cleanHistory = dailyDrawHistory.filter(record => 
+        record &&
+        record.drawnCard &&
+        record.drawnCard.card &&
+        typeof record.drawnCard.card.id === 'string'
+    );
+    
+    const todayRecord = cleanHistory.find(record => record.date === todayStr);
 
     if (todayRecord) {
-      setChosenCard(todayRecord.drawnCard);
-      setHasChosen(true);
-      generateInsights(todayRecord.drawnCard);
+      const fullCardData = TAROT_DECK.find(c => c.id === todayRecord.drawnCard.card.id);
+      
+      if (fullCardData) {
+        const validDrawnCard: DrawnCard = {
+          card: fullCardData,
+          isReversed: !!todayRecord.drawnCard.isReversed,
+        };
+        
+        setChosenCard(validDrawnCard);
+        setHasChosen(true);
+        generateInsights(validDrawnCard);
+      } else {
+        // A record existed, but its card ID was not found in the master deck. Reset state.
+        setChosenCard(null);
+        setHasChosen(false);
+        setDailyInsights(null);
+      }
     } else {
+      // No valid record for today was found. Reset state.
       setChosenCard(null);
       setHasChosen(false);
       setDailyInsights(null);
-      setIsShuffling(false);
     }
-  }, [todayStr, userProfile, dailyDrawHistory]);
+  }, [todayStr, dailyDrawHistory]);
 
   const handleDrawCard = () => {
     if (hasChosen || isShuffling) return;
@@ -81,11 +105,21 @@ const DailyPage: React.FC = () => {
         setChosenCard(card);
         setHasChosen(true);
         addDailyDrawToHistory(card);
+        addXp(10); // Award XP for daily draw
         generateInsights(card);
     }, 600); // Corresponds to animation duration
   };
 
   const generateInsights = async (card: DrawnCard) => {
+    // A more robust guard clause that ensures the card object is not only shaped correctly,
+    // but its ID exists in the master TAROT_DECK. This prevents processing corrupted data.
+    if (!card || !card.card || typeof card.card.id !== 'string' || !TAROT_DECK.some(c => c.id === card.card.id)) {
+        console.error("Invalid or non-existent card data provided to generateInsights:", card);
+        setError("There was an error processing the card's data. Please try again.");
+        setIsGenerating(false);
+        return;
+    }
+      
     if (isGenerating || dailyInsights) return;
 
     setIsGenerating(true);
@@ -93,7 +127,12 @@ const DailyPage: React.FC = () => {
     try {
         const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
         const sign = userProfile.astrologicalSign !== 'None' ? userProfile.astrologicalSign : 'the user';
-        const previousDraws = dailyDrawHistory.slice(1, 5).map(d => `${d.drawnCard.card.name} (${d.drawnCard.isReversed ? 'Reversed' : 'Upright'})`).join(', ') || 'None';
+        // Filter historical data to ensure it's valid before sending to the API.
+        const previousDraws = dailyDrawHistory
+            .slice(1, 5)
+            .filter(d => d && d.drawnCard && d.drawnCard.card && typeof d.drawnCard.card.id === 'string' && TAROT_DECK.some(c => c.id === d.drawnCard.card.id))
+            .map(d => `${d.drawnCard.card.name} (${d.drawnCard.isReversed ? 'Reversed' : 'Upright'})`)
+            .join(', ') || 'None';
         const cardState = card.isReversed ? 'Reversed' : 'Upright';
         const blueprintSummary = `
           - Astrological Sign: ${sign}

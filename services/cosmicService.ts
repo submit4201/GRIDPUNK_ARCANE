@@ -167,7 +167,7 @@ export const generateCosmicBlueprint = (profile: UserProfile): CosmicBlueprint =
   const { reduced: soulUrgeNum } = calculateNameNumber(profile.givenName, 'vowels');
   const { reduced: personalityNum } = calculateNameNumber(profile.givenName, 'consonants');
   const { reduced: heritageNum } = calculateNameNumber(profile.mothersMaidenName, 'all');
-  const { reduced: currentVibeNum } = calculateNameNumber(profile.usedName, 'all');
+  const { reduced: currentVibeNum } = calculateNameNumber(profile.currentName, 'all');
   const birthdayNum = calculateBirthdayNumber(profile.birthDate);
   const maturityNum = calculateMaturityNumber(lifePathNum, destinyNum);
   const { pinnacles, challenges } = calculatePinnaclesAndChallenges(profile.birthDate, lifePathNum);

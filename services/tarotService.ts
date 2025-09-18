@@ -1,5 +1,6 @@
+
 import { TAROT_DECK, NUMEROLOGY_MEANINGS, RUNE_DECK } from '../constants';
-import { DrawnCard, TarotCard, SpreadType, DivinationCard, DrawnDivinationCard, Rune } from '../types';
+import { DrawnCard, TarotCard, SpreadType, DivinationCard, DrawnDivinationCard, Rune, UserProfile } from '../types';
 
 // A simple Linear Congruential Generator (LCG) for seeded random numbers.
 export class SeededRandom {
@@ -25,7 +26,8 @@ export class SeededRandom {
 }
 
 // Simple string hash function to create a numeric seed
-const createNumericSeed = (str: string): number => {
+// FIX: Export the 'createNumericSeed' function so it can be imported by other modules.
+export const createNumericSeed = (str: string): number => {
   let hash = 0;
   for (let i = 0; i < str.length; i++) {
     const char = str.charCodeAt(i);
@@ -55,9 +57,9 @@ const reduceNumber = (num: number): number => {
 };
 
 
-export const getDailySeed = (userId: string, date: Date): number => {
+export const getDailySeed = (profile: UserProfile, date: Date): number => {
   const dateISO = date.toISOString().split('T')[0]; // YYYY-MM-DD
-  const seedString = `${userId}|${dateISO}`;
+  const seedString = `${profile.givenName}|${profile.birthDate}|${dateISO}`;
   return createNumericSeed(seedString);
 };
 

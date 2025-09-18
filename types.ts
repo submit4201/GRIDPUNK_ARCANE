@@ -1,4 +1,23 @@
 
+
+export type AchievementID =
+  | 'first_draw'
+  | 'first_reading'
+  | 'scribe_1'
+  | 'scribe_10'
+  | 'historian_5'
+  | 'streak_3'
+  | 'streak_7'
+  | 'major_arcana_initiate' // 5 majors
+  | 'major_arcana_master'   // all 22 majors
+  | 'wands_adept' // 10 wands
+  | 'cups_adept'  // 10 cups
+  | 'swords_adept' // 10 swords
+  | 'pentacles_adept' // 10 pentacles
+  | 'rune_caster_1'
+  | 'rune_caster_5';
+
+
 export type Arcana = 'Major' | 'Wands' | 'Cups' | 'Swords' | 'Pentacles';
 export type Element = 'Fire' | 'Earth' | 'Air' | 'Water';
 
@@ -72,15 +91,18 @@ export type AstrologicalSign = (typeof ASTROLOGICAL_SIGNS)[number] | 'None';
 
 export interface UserProfile {
   givenName: string;
-  usedName: string;
+  currentName: string;
   mothersMaidenName: string;
   birthDate: string;
   birthTime: string;
   birthPlace: string;
   astrologicalSign: AstrologicalSign;
+  birthConstellation: string;
   readingStyle: 'mystical' | 'practical' | 'psychological';
   readingFocus: 'general' | 'love' | 'career' | 'growth';
-  currentName?: string;
+  level: number;
+  xp: number;
+  unlockedAchievements: AchievementID[];
 }
 
 export interface JournalEntry {

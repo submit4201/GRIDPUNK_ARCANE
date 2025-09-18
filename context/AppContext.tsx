@@ -1,6 +1,6 @@
 import React, { createContext, useContext, ReactNode } from 'react';
 import useLocalStorage from '../hooks/useLocalStorage';
-import { JournalEntry, SavedReading, DrawnCard, AstrologicalSign, DailyDrawRecord, UserProfile, DrawnDivinationCard, Page } from '../types';
+import { JournalEntry, SavedReading, DrawnCard, DailyDrawRecord, UserProfile, Page, AchievementID } from '../types';
 
 interface AppContextType {
   journalEntries: JournalEntry[];
@@ -18,23 +18,28 @@ interface AppContextType {
   setIsOnboarded: (status: boolean) => void;
   runeCastsToday: number;
   incrementRuneCast: () => void;
-  // FIX: Added page navigation state to the context to make it globally accessible.
   activePage: Page;
   setPage: (page: Page) => void;
+  addXp: (amount: number) => void;
+  unlockAchievement: (id: AchievementID) => void;
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
 
 const initialProfile: UserProfile = {
     givenName: '',
-    usedName: '',
+    currentName: '',
     mothersMaidenName: '',
     birthDate: '',
     birthTime: '',
     birthPlace: '',
     astrologicalSign: 'None',
+    birthConstellation: '',
     readingStyle: 'mystical',
     readingFocus: 'general',
+    level: 1,
+    xp: 0,
+    unlockedAchievements: [],
 }
 
 export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
@@ -45,7 +50,6 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
   const [dailyDrawHistory, setDailyDrawHistory] = useLocalStorage<DailyDrawRecord[]>('dailyDrawHistory', []);
   const [isOnboarded, setIsOnboarded] = useLocalStorage<boolean>('isOnboarded', false);
   const [runeCasts, setRuneCasts] = useLocalStorage<{ date: string; count: number }>('runeCasts', { date: '', count: 0 });
-  // FIX: Moved page navigation state here to be provided by the context.
   const [activePage, setPage] = useLocalStorage<Page>('activePage', 'Daily');
 
   const todayStr = new Date().toISOString().split('T')[0];
@@ -54,6 +58,35 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
   const incrementRuneCast = () => {
       const currentCount = runeCasts.date === todayStr ? runeCasts.count : 0;
       setRuneCasts({ date: todayStr, count: currentCount + 1 });
+  };
+
+  const addXp = (amount: number) => {
+    // FIX: The useLocalStorage hook setter doesn't support functional updates like useState.
+    // We now read the userProfile from the context's scope and pass a new object to the setter.
+    const prevProfile = userProfile;
+    let newXp = prevProfile.xp + amount;
+    let newLevel = prevProfile.level;
+    let xpForNextLevel = Math.round(500 * Math.pow(1.5, newLevel - 1));
+
+    while (newXp >= xpForNextLevel) {
+        newXp -= xpForNextLevel;
+        newLevel++;
+        xpForNextLevel = Math.round(500 * Math.pow(1.5, newLevel - 1));
+    }
+    setUserProfile({ ...prevProfile, xp: newXp, level: newLevel });
+  };
+
+  const unlockAchievement = (id: AchievementID) => {
+    // FIX: The useLocalStorage hook setter doesn't support functional updates like useState.
+    // We now read the userProfile from the context's scope and pass a new object to the setter.
+    const prevProfile = userProfile;
+    if (prevProfile.unlockedAchievements.includes(id)) {
+        return;
+    }
+    setUserProfile({
+        ...prevProfile,
+        unlockedAchievements: [...prevProfile.unlockedAchievements, id]
+    });
   };
 
   const addJournalEntry = (text: string, linkedCard?: DrawnCard) => {
@@ -107,9 +140,10 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     setIsOnboarded,
     runeCastsToday,
     incrementRuneCast,
-    // FIX: Provide page navigation state through the context.
     activePage,
     setPage,
+    addXp,
+    unlockAchievement,
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
