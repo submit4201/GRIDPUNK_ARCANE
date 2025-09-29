@@ -59,24 +59,30 @@ export function checkAndUnlockAchievements(
     check('rune_caster_5', runeReadings >= 5);
 
     // Streak checks
-    if (dailyDrawHistory.length > 1) {
+    if (dailyDrawHistory.length > 0) {
         let streak = 1;
-        const sortedHistory = [...dailyDrawHistory].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
-        for (let i = 0; i < sortedHistory.length - 1; i++) {
-            const current = new Date(sortedHistory[i].date);
-            const previous = new Date(sortedHistory[i + 1].date);
-            const diffTime = current.getTime() - previous.getTime();
-            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-            if (diffDays === 1) {
-                streak++;
-            } else if (diffDays > 1) {
-                break; // Streak broken
+        // Using split('T')[0] to get just the date part is robust against timezones.
+        // Sorting reverse alphabetically works for 'YYYY-MM-DD' format.
+        const uniqueDateStrings = [...new Set(dailyDrawHistory.map(d => d.date.split('T')[0]))].sort().reverse();
+
+        if (uniqueDateStrings.length > 1) {
+            for (let i = 0; i < uniqueDateStrings.length - 1; i++) {
+                const currentDate = new Date(uniqueDateStrings[i]);
+                const previousDate = new Date(uniqueDateStrings[i + 1]);
+
+                // Increment the previous day by one. This is robust against DST changes.
+                previousDate.setDate(previousDate.getDate() + 1);
+
+                // Compare the date part of the ISO strings
+                if (currentDate.toISOString().split('T')[0] === previousDate.toISOString().split('T')[0]) {
+                    streak++;
+                } else {
+                    break; // Streak is broken
+                }
             }
         }
         check('streak_3', streak >= 3);
         check('streak_7', streak >= 7);
-    } else if (dailyDrawHistory.length === 1) {
-        // Handle case for the very first draw
     }
 
     // Card collection checks

@@ -129,7 +129,7 @@ export interface DailyDrawRecord {
   drawnCard: DrawnCard;
 }
 
-export type Page = 'Daily' | 'Readings' | 'Journal' | 'Guide' | 'Progress' | 'Profile' | 'Onboarding';
+export type Page = 'Daily' | 'Readings' | 'Journal' | 'Guide' | 'Progress' | 'Profile' | 'Onboarding' | 'Settings';
 
 // Numerology specific types
 export interface CosmicNumber {
@@ -149,7 +149,6 @@ export interface Challenge {
   number: number;
   theme: string;
   description: string;
-  // FIX: Added missing ageRange property to the Challenge interface.
   ageRange: string;
 }
 

@@ -26,7 +26,6 @@ export class SeededRandom {
 }
 
 // Simple string hash function to create a numeric seed
-// FIX: Export the 'createNumericSeed' function so it can be imported by other modules.
 export const createNumericSeed = (str: string): number => {
   let hash = 0;
   for (let i = 0; i < str.length; i++) {
@@ -37,24 +36,7 @@ export const createNumericSeed = (str: string): number => {
   return hash;
 };
 
-// Reduces a number to a single digit or a master number (11, 22, 33)
-const reduceNumber = (num: number): number => {
-  if (num === 11 || num === 22 || num === 33) {
-    return num;
-  }
-  if (num < 10) {
-    return num;
-  }
-  let sum = 0;
-  String(num).split('').forEach(digit => {
-    sum += parseInt(digit, 10);
-  });
-  // Recursively reduce until it's a single digit or master number
-  if (sum > 9 && sum !== 11 && sum !== 22 && sum !== 33) {
-    return reduceNumber(sum);
-  }
-  return sum;
-};
+import { reduceNumber } from '../utils/numerology';
 
 
 export const getDailySeed = (profile: UserProfile, date: Date): number => {

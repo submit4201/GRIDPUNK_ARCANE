@@ -12,26 +12,9 @@ const CHAR_TO_NUM: { [key: string]: number } = {
   i: 9, r: 9,
 };
 
-const VOWELS = new Set(['a', 'e', 'i', 'o', 'u']);
+import { reduceNumber } from '../utils/numerology';
 
-// Reduces a number to a single digit or a master number (11, 22, 33)
-const reduceNumber = (num: number): number => {
-  if (num === 11 || num === 22 || num === 33) {
-    return num;
-  }
-  if (num < 10) {
-    return num;
-  }
-  let sum = 0;
-  String(num).split('').forEach(digit => {
-    sum += parseInt(digit, 10);
-  });
-  // Recursively reduce until it's a single digit or master number
-  if (sum > 9 && sum !== 11 && sum !== 22 && sum !== 33) {
-    return reduceNumber(sum);
-  }
-  return sum;
-};
+const VOWELS = new Set(['a', 'e', 'i', 'o', 'u']);
 
 const getUnreducedSum = (value: string | number): number => {
     return String(value).split('').reduce((acc, digit) => acc + parseInt(digit, 10), 0);
@@ -147,6 +130,7 @@ const PINNACLE_THEMES: { [key: number]: { theme: string; description: string } }
     9: { theme: "The Philanthropist", description: "A cycle of completion, compassion, and humanitarianism. Letting go and serving others are highlighted." },
     11: { theme: "The Spiritual Beacon", description: "A master cycle of heightened intuition, spiritual awakenings, and inspirational leadership." },
     22: { theme: "The Master Architect", description: "A powerful period for turning ambitious dreams into tangible reality on a large scale." },
+    33: { theme: "The Master Healer", description: "A profound cycle of compassionate service, healing, and nurturing guidance on a wide scale." },
 };
 
 const CHALLENGE_THEMES: { [key: number]: { theme: string; description: string } } = {
@@ -159,6 +143,9 @@ const CHALLENGE_THEMES: { [key: number]: { theme: string; description: string } 
     6: { theme: "The Challenge of Responsibility", description: "Balancing the needs of others with one's own, and avoiding perfectionism or neglect. The lesson is in healthy nurturing." },
     7: { theme: "The Challenge of Faith", description: "Overcoming skepticism, isolation, and superficiality. The lesson is in trusting one's inner wisdom and seeking deeper truths." },
     8: { theme: "The Challenge of Power", description: "Using authority and finances wisely, without becoming domineering or a victim. The lesson is in mastering the material world with integrity." },
+    11: { theme: "The Challenge of Illusion", description: "Living up to high spiritual potential without succumbing to nervous tension or self-doubt. The lesson is in grounding visionary ideas." },
+    22: { theme: "The Challenge of Scale", description: "Wielding immense power for the greater good without becoming overwhelmed or corrupt. The lesson is in practical idealism." },
+    33: { theme: "The Challenge of Martyrdom", description: "Healing and helping others without sacrificing one's own well-being. The lesson is in compassionate detachment." },
 };
 
 export const generateCosmicBlueprint = (profile: UserProfile): CosmicBlueprint => {
