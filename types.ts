@@ -112,6 +112,11 @@ export interface JournalEntry {
   linkedCard?: DrawnCard;
 }
 
+export type Message = {
+  sender: 'user' | 'ai';
+  text: string;
+};
+
 export interface SavedReading {
   id: string;
   date: string;
@@ -120,7 +125,7 @@ export interface SavedReading {
   positions: string[];
   cards: DrawnDivinationCard[];
   title: string;
-  aiSummary: string;
+  chatHistory: Message[];
   userNotes: string;
 }
 

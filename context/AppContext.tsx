@@ -8,6 +8,7 @@ interface AppContextType {
   savedReadings: SavedReading[];
   addSavedReading: (reading: Omit<SavedReading, 'id' | 'date'>) => void;
   updateSavedReadingNotes: (readingId: string, notes: string) => void;
+  updateReadingChatHistory: (readingId: string, chatHistory: Message[]) => void;
   isPremium: boolean;
   setIsPremium: (isPremium: boolean) => void;
   userProfile: UserProfile;
@@ -116,6 +117,14 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     );
   };
 
+  const updateReadingChatHistory = (readingId: string, chatHistory: Message[]) => {
+    setSavedReadings(
+        savedReadings.map(r =>
+            r.id === readingId ? { ...r, chatHistory: chatHistory } : r
+        )
+    );
+  };
+
   const addDailyDrawToHistory = (drawnCard: DrawnCard) => {
     const today = new Date().toISOString().split('T')[0];
     const newRecord: DailyDrawRecord = { date: today, drawnCard };
@@ -130,6 +139,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     savedReadings,
     addSavedReading,
     updateSavedReadingNotes,
+    updateReadingChatHistory,
     isPremium,
     setIsPremium,
     userProfile,
